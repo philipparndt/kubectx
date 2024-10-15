@@ -2,10 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/philipparndt/kubectx/internal/cui"
 	"github.com/philipparndt/kubectx/internal/kube"
 	"github.com/spf13/cobra"
-	"log"
 )
 
 // useCmd represents the use command
@@ -14,23 +12,18 @@ var useCmd = &cobra.Command{
 	Short: "Switch to a different context",
 	Long:  `Switch to a different context. If no context is provided, a list of available contexts will be shown.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config := kube.Load()
-
-		toBeSelected := ""
-		if len(args) > 1 {
-			log.Panic("Too many arguments")
-		} else if len(args) == 1 {
-			toBeSelected = args[0]
-		} else {
-			ctx := cui.SelectContext(config)
-			if ctx == nil {
-				log.Panic("No context selected")
-			}
-			toBeSelected = ctx.Name
+		config := kube.LoadDefault()
+		contexts := kube.SelectContext(config, args)
+		if len(contexts) > 1 {
+			fmt.Println("Too many arguments")
+			return
+		} else if len(contexts) == 0 {
+			fmt.Println("No context selected")
+			return
 		}
 
-		fmt.Println("Selected context:", toBeSelected)
-		config.CurrentContext = toBeSelected
+		fmt.Println("Selected context:", contexts[0])
+		config.CurrentContext = contexts[0]
 
 		kube.Save(config)
 

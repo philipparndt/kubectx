@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/philipparndt/kubectx/internal/cui"
 	"github.com/philipparndt/kubectx/internal/kube"
 	"github.com/spf13/cobra"
 )
@@ -13,40 +12,32 @@ var deleteCmd = &cobra.Command{
 	Short: "Delete a context",
 	Long:  `Delete a context. If no context is provided, a list of available contexts will be shown.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		config := kube.Load()
+		config := kube.LoadDefault()
 
-		names := args
-		if len(names) == 0 {
-			ctx := cui.SelectContext(config)
-			if ctx != nil {
-				names = append(names, ctx.Name)
-			}
-		}
+		contexts := kube.SelectContext(config, args)
 
-		if len(names) != 0 {
-			deleted := []string{}
-			for name := range config.Contexts {
-				for _, n := range names {
-					if name == n {
-						deleted = append(deleted, name)
-						ctx := config.Contexts[name]
+		var deleted []string
+		for name := range config.Contexts {
+			for _, n := range contexts {
+				if name == n {
+					deleted = append(deleted, name)
+					ctx := config.Contexts[name]
 
-						// delete context, cluster and user
-						delete(config.Contexts, name)
-						delete(config.Clusters, ctx.Cluster)
-						delete(config.AuthInfos, ctx.AuthInfo)
-					}
+					// delete context, cluster and user
+					delete(config.Contexts, name)
+					delete(config.Clusters, ctx.Cluster)
+					delete(config.AuthInfos, ctx.AuthInfo)
 				}
 			}
-
-			if len(deleted) == 0 {
-				fmt.Println("No contexts found")
-				return
-			}
-
-			kube.Save(config)
-			fmt.Println("Deleted contexts:", deleted)
 		}
+
+		if len(deleted) == 0 {
+			fmt.Println("No contexts found")
+			return
+		}
+
+		kube.Save(config)
+		fmt.Println("Deleted contexts:", deleted)
 	},
 }
 

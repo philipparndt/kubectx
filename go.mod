@@ -2,13 +2,16 @@ module github.com/philipparndt/kubectx
 
 go 1.23.2
 
-require k8s.io/client-go v0.31.1
+require (
+	github.com/gdamore/tcell/v2 v2.7.4
+	github.com/spf13/cobra v1.8.1
+	k8s.io/client-go v0.31.1
+)
 
 require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/fxamacker/cbor/v2 v2.7.0 // indirect
 	github.com/gdamore/encoding v1.0.0 // indirect
-	github.com/gdamore/tcell/v2 v2.7.4 // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
@@ -19,8 +22,8 @@ require (
 	github.com/mattn/go-runewidth v0.0.15 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/rivo/uniseg v0.4.3 // indirect
-	github.com/spf13/cobra v1.8.1 // indirect
+	github.com/rivo/tview v0.0.0-20240921122403-a64fc48d7654 // indirect
+	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	golang.org/x/net v0.26.0 // indirect

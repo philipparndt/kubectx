@@ -2,6 +2,9 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/philipparndt/kubectx/internal/cui"
+	"github.com/philipparndt/kubectx/internal/kube"
+	"log"
 
 	"github.com/spf13/cobra"
 )
@@ -9,15 +12,32 @@ import (
 // renameCmd represents the rename command
 var renameCmd = &cobra.Command{
 	Use:   "rename",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Rename a context",
+	Long:  `Rename a context. If no context is provided, a list of available contexts will be shown.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("rename called")
+		config := kube.LoadDefault()
+		contexts := kube.SelectContext(config, args)
+		if len(contexts) == 0 {
+			fmt.Println("No context selected")
+			return
+		} else if len(contexts) > 1 {
+			log.Panic("Too many arguments")
+		}
+
+		newName := cui.RenameForm(contexts[0])
+		if newName == contexts[0] {
+			fmt.Println("No changes made")
+			return
+		}
+
+		kube.Backup()
+
+		ctx := config.Contexts[contexts[0]]
+		delete(config.Contexts, contexts[0])
+		config.Contexts[newName] = ctx
+		kube.Save(config)
+
+		fmt.Println("Context renamed to:", newName)
 	},
 }
 

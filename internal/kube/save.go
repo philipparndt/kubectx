@@ -7,7 +7,7 @@ import (
 
 func Save(config *api.Config) {
 	// Save changes to kubeconfig file
-	err := clientcmd.WriteToFile(*config, "./tmp/config")
+	err := clientcmd.WriteToFile(*config, FileName())
 	if err != nil {
 		panic(err)
 	}

@@ -11,9 +11,13 @@ func FileName() string {
 	return filepath.Join(os.Getenv("HOME"), ".kube", "config")
 }
 
-func Load() *api.Config {
+func LoadDefault() *api.Config {
+	return Load(FileName())
+}
+
+func Load(filename string) *api.Config {
 	// Load the kubeconfig file
-	config, err := clientcmd.LoadFromFile(FileName())
+	config, err := clientcmd.LoadFromFile(filename)
 	if err != nil {
 		panic(err)
 	}

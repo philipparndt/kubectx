@@ -44,7 +44,7 @@ func Select[T any](items []T, labelProvider LabelProvider[T]) *T {
 	for {
 		screen.Clear()
 
-		// Display the filter query (fzf-like prompt with `>`)
+		// Display the filter query
 		printString(screen, 1, 0, fmt.Sprintf("> %s", query), normalStyle)
 
 		// Filter the list based on the query
