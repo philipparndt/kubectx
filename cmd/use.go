@@ -1,38 +1,20 @@
-/*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-*/
 package cmd
 
 import (
 	"fmt"
 	"github.com/philipparndt/kubectx/internal/cui"
-	"k8s.io/client-go/tools/clientcmd"
-	"log"
-	"os"
-	"path/filepath"
-
+	"github.com/philipparndt/kubectx/internal/kube"
 	"github.com/spf13/cobra"
+	"log"
 )
 
 // useCmd represents the use command
 var useCmd = &cobra.Command{
 	Use:   "use",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Switch to a different context",
+	Long:  `Switch to a different context. If no context is provided, a list of available contexts will be shown.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// Find kubeconfig file (default is $HOME/.kube/config)
-		kubeconfig := filepath.Join(os.Getenv("HOME"), ".kube", "config")
-
-		// Load the kubeconfig file
-		config, err := clientcmd.LoadFromFile(kubeconfig)
-		if err != nil {
-			panic(err)
-		}
+		config := kube.Load()
 
 		toBeSelected := ""
 		if len(args) > 1 {
@@ -50,11 +32,7 @@ to quickly create a Cobra application.`,
 		fmt.Println("Selected context:", toBeSelected)
 		config.CurrentContext = toBeSelected
 
-		// Save changes to kubeconfig file
-		err = clientcmd.WriteToFile(*config, "./tmp/config")
-		if err != nil {
-			log.Panic(err)
-		}
+		kube.Save(config)
 
 		fmt.Println("Kubeconfig updated with new context!")
 
