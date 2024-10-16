@@ -63,6 +63,7 @@ var importCmd = &cobra.Command{
 		kube.Backup()
 		kube.Save(config)
 	},
+	Aliases: []string{"add"},
 }
 
 func init() {
