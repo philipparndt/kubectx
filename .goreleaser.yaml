@@ -120,7 +120,7 @@ brews:
     # Your app's description.
     #
     # Templates: allowed
-    description: "Command line tool for managing Kubernetes contexts"
+    description: "Command-line tool for managing Kubernetes contexts"
 
     # SPDX identifier of your app's license.
     license: "Apache-2.0"
