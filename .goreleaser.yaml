@@ -238,24 +238,24 @@ brews:
       # Templates: allowed
       #  ssh_command: 'ssh -i {{ .Env.KEY }} -o SomeOption=yes'
 
-#winget:
-#  - name: kubectx
-#    publisher: philipparndt
-#    short_description: "Tool for managing Kubernetes contexts"
-#    license: "mit"
-#    package_identifier: philipparndt.kubectx
-#    tags:
-#      - kubernetes
-#      - go
-#      - cli
-#    repository:
-#      # https://github.com/philipparndt/winget-pkgs
-#      owner: philipparndt
-#      name: winget-pkgs
-#      branch: master
-#      pull_request:
-#        enabled: true
-#        base:
-#          owner: microsoft
-#          name: winget-pkgs
-#          branch: master
+winget:
+  - name: kubectx
+    publisher: philipparndt
+    short_description: "Command-line tool for managing Kubernetes contexts"
+    license: "Apache-2.0"
+    package_identifier: philipparndt.kubectx
+    tags:
+      - kubernetes
+      - go
+      - cli
+    repository:
+      # https://github.com/philipparndt/winget-pkgs
+      owner: philipparndt
+      name: winget-pkgs
+      branch: master
+      pull_request:
+        enabled: true
+        base:
+          owner: microsoft
+          name: winget-pkgs
+          branch: master
