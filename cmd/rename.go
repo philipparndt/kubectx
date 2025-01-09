@@ -30,11 +30,11 @@ var renameCmd = &cobra.Command{
 			return
 		}
 
-		kube.Backup()
-
 		ctx := config.Contexts[contexts[0]]
 		delete(config.Contexts, contexts[0])
 		config.Contexts[newName] = ctx
+
+		kube.Backup()
 		kube.Save(config)
 
 		fmt.Println("Context renamed to:", newName)
