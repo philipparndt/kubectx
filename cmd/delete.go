@@ -23,10 +23,30 @@ var deleteCmd = &cobra.Command{
 					deleted = append(deleted, name)
 					ctx := config.Contexts[name]
 
-					// delete context, cluster and user
+					// Check if the cluster and user are still used by other contexts
+					clusterUsed := false
+					userUsed := false
+					for _, otherCtx := range config.Contexts {
+						if otherCtx.Cluster == ctx.Cluster && otherCtx != ctx {
+							clusterUsed = true
+						}
+						if otherCtx.AuthInfo == ctx.AuthInfo && otherCtx != ctx {
+							userUsed = true
+						}
+					}
+
+					// Delete context
 					delete(config.Contexts, name)
-					delete(config.Clusters, ctx.Cluster)
-					delete(config.AuthInfos, ctx.AuthInfo)
+
+					// Delete cluster if not used
+					if !clusterUsed {
+						delete(config.Clusters, ctx.Cluster)
+					}
+
+					// Delete user if not used
+					if !userUsed {
+						delete(config.AuthInfos, ctx.AuthInfo)
+					}
 				}
 			}
 		}
@@ -36,6 +56,7 @@ var deleteCmd = &cobra.Command{
 			return
 		}
 
+		kube.Backup()
 		kube.Save(config)
 		fmt.Println("Deleted contexts:", deleted)
 	},

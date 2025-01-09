@@ -1,3 +1,4 @@
 tmp/
 .idea/
 kubectx
+.DS_Store
