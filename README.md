@@ -8,6 +8,8 @@ Command-line tool to manage Kubernetes contexts
 - delete context
 - import context to your default kubeconfig
 
-## Installation
-Homebrew: https://github.com/philipparndt/homebrew-kubectx
-WinGet: TODO
+## Installation with brew
+https://github.com/philipparndt/homebrew-kubectx
+
+## Installation with go
+`go install github.com/philipparndt/kubectx@main`
