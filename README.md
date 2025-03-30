@@ -9,6 +9,8 @@ Command-line tool to manage Kubernetes contexts
 - import context to your default kubeconfig
 
 ## Installation with brew
+`brew install philipparndt/kubectx/kubectx`
+
 https://github.com/philipparndt/homebrew-kubectx
 
 ## Installation with go
