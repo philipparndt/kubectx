@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+	"github.com/philipparndt/kubectx/internal/kube"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -14,6 +16,14 @@ var rootCmd = &cobra.Command{
 It allows you to switch between contexts, delete contexts and import new contexts to you local
 kubernetes configuration.
 `,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		result := cmd.Help()
+
+		cfg := kube.LoadDefault()
+		fmt.Printf("\n-------\nCurrent context: <%s>\n", cfg.CurrentContext)
+
+		return result
+	},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
