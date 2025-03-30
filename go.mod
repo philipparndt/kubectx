@@ -4,7 +4,7 @@ go 1.23.2
 
 require (
 	github.com/gdamore/tcell/v2 v2.8.0
-	github.com/rivo/tview v0.0.0-20241227133733-17b7edb88c57
+	github.com/rivo/tview v0.0.0-20250325173046-7b72abf45814
 	github.com/spf13/cobra v1.8.1
 	k8s.io/client-go v0.32.3
 )
