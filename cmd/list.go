@@ -30,7 +30,11 @@ var listCmd = &cobra.Command{
 		})
 
 		for _, name := range items {
-			fmt.Println(name)
+			postfix := ""
+			if name == config.CurrentContext {
+				postfix = " (active)"
+			}
+			fmt.Println(name + postfix)
 		}
 	},
 	Aliases: []string{"l"},
