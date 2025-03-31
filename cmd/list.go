@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/philipparndt/kubectx/internal/colors"
 	"github.com/philipparndt/kubectx/internal/kube"
 	"github.com/spf13/cobra"
 	"sort"
@@ -30,11 +31,12 @@ var listCmd = &cobra.Command{
 		})
 
 		for _, name := range items {
-			postfix := ""
 			if name == config.CurrentContext {
-				postfix = " (active)"
+				fmt.Println(colors.Cyan(name + " (active)"))
+			} else {
+				fmt.Println(name)
 			}
-			fmt.Println(name + postfix)
+
 		}
 	},
 	Aliases: []string{"l"},
