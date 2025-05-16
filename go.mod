@@ -6,7 +6,7 @@ require (
 	github.com/gdamore/tcell/v2 v2.8.1
 	github.com/rivo/tview v0.0.0-20250325173046-7b72abf45814
 	github.com/spf13/cobra v1.9.1
-	k8s.io/client-go v0.32.3
+	k8s.io/client-go v0.33.1
 )
 
 require (
