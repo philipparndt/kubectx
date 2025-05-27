@@ -67,23 +67,25 @@ brews:
 
     license: "Apache-2.0"
 
-    post_install: |
+    install: |
+      bin.install "kubectx"
+
       begin
-        bash_output = Utils.safe_popen_read("#{bin}/kubectx", "completion", "bash")
+        bash_output = Utils.safe_popen_read({ "SHELL" => "bash" }, "#{bin}/kubectx completion bash")
         (bash_completion/"kubectx").write bash_output
       rescue => e
         opoo "Failed to install bash completion: #{e}"
       end
 
       begin
-        zsh_output = Utils.safe_popen_read("#{bin}/kubectx", "completion", "zsh")
+        zsh_output = Utils.safe_popen_read({ "SHELL" => "zsh" }, "#{bin}/kubectx completion zsh")
         (zsh_completion/"_kubectx").write zsh_output
       rescue => e
         opoo "Failed to install zsh completion: #{e}"
       end
 
       begin
-        fish_output = Utils.safe_popen_read("#{bin}/kubectx", "completion", "fish")
+        fish_output = Utils.safe_popen_read({ "SHELL" => "fish" }, "#{bin}/kubectx completion fish")
         (fish_completion/"kubectx.fish").write fish_output
       rescue => e
         opoo "Failed to install fish completion: #{e}"
