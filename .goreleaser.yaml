@@ -58,8 +58,7 @@ brews:
 
     directory: Formula
 
-    # Caveats for the user of your binary.
-    caveats: "Run using kubectx. Bash, Zsh, Fish, and PowerShell completions are installed automatically."
+    caveats: "Run using kubectx."
 
     homepage: "https://github.com/philipparndt/kubectx"
 
