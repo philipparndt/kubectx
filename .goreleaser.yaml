@@ -50,9 +50,6 @@ brews:
     goarm: 6
     goamd64: v1
 
-    install: |
-      bin.install "kubectx"
-
     url_template: "https://github.com/philipparndt/kubectx/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
 
     commit_author:
