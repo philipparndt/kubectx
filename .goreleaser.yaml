@@ -47,6 +47,7 @@ changelog:
 
 # .goreleaser.yaml
 brews:
+  - # Name of the recipe
     name: kubectx
 
     goarm: 6
