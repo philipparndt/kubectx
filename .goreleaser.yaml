@@ -2,13 +2,14 @@ version: 2
 
 before:
   hooks:
-    # You may remove this if you don't use go modules.
     - go mod tidy
-    # you may remove this if you don't need go generate
     - go generate ./...
 
 builds:
-  - env:
+  - id: default
+    main: ./cmd/kubectx
+    binary: kubectx
+    env:
       - CGO_ENABLED=0
     goos:
       - linux
@@ -25,7 +26,6 @@ release:
 
 archives:
   - formats: [tar.gz]
-    # this name template makes the OS and Arch compatible with the results of `uname`.
     name_template: >-
       {{ .ProjectName }}_
       {{- .Os }}_
@@ -33,10 +33,9 @@ archives:
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
       {{- if .Arm }}v{{ .Arm }}{{ end }}
-    # use zip for windows archives
     format_overrides:
-    - goos: windows
-      formats: [zip]
+      - goos: windows
+        formats: [zip]
 
 changelog:
   sort: asc
@@ -45,52 +44,55 @@ changelog:
       - "^docs:"
       - "^test:"
 
-# .goreleaser.yaml
 brews:
-  - # Name of the recipe
-    name: kubectx
+  - name: kubectx
 
     goarm: 6
     goamd64: v1
 
+    install: |
+      bin.install "kubectx"
+
     url_template: "https://github.com/philipparndt/kubectx/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
 
-    # Git author used to commit to the repository.
     commit_author:
       name: Philipp Arndt
       email: opensource@rnd7.de
 
-    # The project name and current git tag are used in the format string.
-    #
-    # Templates: allowed
     commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
 
-    # Directory inside the repository to put the formula.
     directory: Formula
 
-    # Caveats for the user of your binary.
-    caveats: "Run using kubectx. Bash, Zsh, Fish, and PowerShell completions are installed automatically."
+    caveats: |
+      Run using kubectx. Bash, Zsh, Fish, and PowerShell completions are installed automatically.
 
-    # Your app's homepage.
     homepage: "https://github.com/philipparndt/kubectx"
 
-    # Your app's description.
-    #
-    # Templates: allowed
     description: "Command-line tool for managing Kubernetes contexts"
 
-    # SPDX identifier of your app's license.
     license: "Apache-2.0"
 
     post_install: |
-      bash_output = Utils.safe_popen_read("#{bin}/kubectx", "completion", "bash")
-      (bash_completion/"kubectx").write bash_output
-      
-      zsh_output = Utils.safe_popen_read("#{bin}/kubectx", "completion", "zsh")
-      (zsh_completion/"_kubectx").write zsh_output
-      
-      fish_output = Utils.safe_popen_read("#{bin}/kubectx", "completion", "fish")
-      (fish_completion/"kubectx.fish").write fish_output
+      begin
+        bash_output = Utils.safe_popen_read("#{bin}/kubectx", "completion", "bash")
+        (bash_completion/"kubectx").write bash_output
+      rescue => e
+        opoo "Failed to install bash completion: #{e}"
+      end
+
+      begin
+        zsh_output = Utils.safe_popen_read("#{bin}/kubectx", "completion", "zsh")
+        (zsh_completion/"_kubectx").write zsh_output
+      rescue => e
+        opoo "Failed to install zsh completion: #{e}"
+      end
+
+      begin
+        fish_output = Utils.safe_popen_read("#{bin}/kubectx", "completion", "fish")
+        (fish_completion/"kubectx.fish").write fish_output
+      rescue => e
+        opoo "Failed to install fish completion: #{e}"
+      end
 
     repository:
       owner: philipparndt
