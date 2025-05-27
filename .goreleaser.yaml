@@ -24,7 +24,7 @@ release:
     name: kubectx
 
 archives:
-  - format: tar.gz
+  - formats: [tar.gz]
     # this name template makes the OS and Arch compatible with the results of `uname`.
     name_template: >-
       {{ .ProjectName }}_
@@ -35,8 +35,8 @@ archives:
       {{- if .Arm }}v{{ .Arm }}{{ end }}
     # use zip for windows archives
     format_overrides:
-      - goos: windows
-        format: zip
+    - goos: windows
+      formats: [zip]
 
 changelog:
   sort: asc
@@ -163,9 +163,10 @@ brews:
     # Custom post_install script for brew.
     # Used to install completion scripts after the main installation
     post_install: |
-      bash_completion.install "#{bin}/kubectx completion bash" => "kubectx"
-      zsh_completion.install "#{bin}/kubectx completion zsh" => "_kubectx"
-      fish_completion.install "#{bin}/kubectx completion fish" => "kubectx.fish"
+      (bash_completion/"kubectx").write Utils.safe_popen_read("#{bin}/kubectx", "completion", "bash")
+      (zsh_completion/"_kubectx").write Utils.safe_popen_read("#{bin}/kubectx", "completion", "zsh")
+      (fish_completion/"kubectx.fish").write Utils.safe_popen_read("#{bin}/kubectx", "completion", "fish")
+      # For PowerShell completion, users can run: kubectx completion powershell | Out-String | Invoke-Expression
 
     # Repository to push the generated files to.
     repository:
