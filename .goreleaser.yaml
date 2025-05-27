@@ -115,7 +115,7 @@ brews:
     directory: Formula
 
     # Caveats for the user of your binary.
-    caveats: "Run using kubectx"
+    caveats: "Run using kubectx. Bash, Zsh, Fish, and PowerShell completions are installed automatically."
 
     # Your app's homepage.
     homepage: "https://github.com/philipparndt/kubectx"
@@ -161,10 +161,11 @@ brews:
     # <?xml version="1.0" encoding="UTF-8"?>
     # ...
     # Custom post_install script for brew.
-    # Could be used to do any additional work after the "install" script
-    #post_install: |
-    #    etc.install "app-config.conf"
-    # ...
+    # Used to install completion scripts after the main installation
+    post_install: |
+      bash_completion.install "#{bin}/kubectx completion bash" => "kubectx"
+      zsh_completion.install "#{bin}/kubectx completion zsh" => "_kubectx"
+      fish_completion.install "#{bin}/kubectx completion fish" => "kubectx.fish"
 
     # Repository to push the generated files to.
     repository:
