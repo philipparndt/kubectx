@@ -22,6 +22,8 @@ func validateFiles(files []string) ([]string, error) {
 	return files, nil
 }
 
+var upgrade = false
+
 // importCmd represents the add command
 var importCmd = &cobra.Command{
 	Use:   "import",
@@ -46,8 +48,12 @@ var importCmd = &cobra.Command{
 			toBeImported := kube.Load(file)
 			for name, ctx := range toBeImported.Contexts {
 				if _, ok := config.Contexts[name]; ok {
-					fmt.Println("Context", name, "already exists, skipping")
-					continue
+					if upgrade {
+						fmt.Println("Upgrading context", name)
+					} else {
+						fmt.Println("Skipping context", name, "as it already exists (use --upgrade to overwrite)")
+						continue
+					}
 				}
 
 				config.Contexts[name] = ctx
@@ -68,14 +74,5 @@ var importCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(importCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// addCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// addCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	importCmd.Flags().BoolVarP(&upgrade, "upgrade", "u", false, "Upgrade existing contexts")
 }
