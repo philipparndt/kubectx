@@ -2,10 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-
 	"github.com/philipparndt/kubectx/internal/kube"
 	"github.com/spf13/cobra"
+	"os"
 )
 
 func validateFiles(files []string) ([]string, error) {
@@ -47,34 +46,6 @@ var importCmd = &cobra.Command{
 			fmt.Println("Importing", file)
 
 			toBeImported := kube.Load(file)
-
-			// Upgrade keeps the existing names
-			if upgrade {
-				// Build a map from server to existing cluster name
-				serverToName := make(map[string]string)
-				for name, cluster := range config.Clusters {
-					serverToName[cluster.Server] = name
-				}
-
-				// For each imported cluster, if a cluster with the same server exists, rename it in the imported config
-				for importedName, importedCluster := range toBeImported.Clusters {
-					if existingName, ok := serverToName[importedCluster.Server]; ok && importedName != existingName {
-						fmt.Println("Importing cluster", importedName, "as", existingName, "(matched by server)")
-						// Update all contexts to use the existing cluster name
-						for ctxName, ctx := range toBeImported.Contexts {
-							if ctx.Cluster == importedName {
-								ctx.Cluster = existingName
-								toBeImported.Contexts[ctxName] = ctx
-							}
-						}
-						// If the existing cluster name is not already in toBeImported, add/overwrite it
-						toBeImported.Clusters[existingName] = importedCluster
-						// Remove the old cluster name from the import set
-						delete(toBeImported.Clusters, importedName)
-					}
-				}
-			}
-
 			for name, ctx := range toBeImported.Contexts {
 				if _, ok := config.Contexts[name]; ok {
 					if upgrade {
@@ -86,6 +57,9 @@ var importCmd = &cobra.Command{
 				}
 
 				config.Contexts[name] = ctx
+			}
+			for name, cluster := range toBeImported.Clusters {
+				config.Clusters[name] = cluster
 			}
 			for name, authInfo := range toBeImported.AuthInfos {
 				config.AuthInfos[name] = authInfo
