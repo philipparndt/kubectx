@@ -7,7 +7,7 @@ toolchain go1.24.4
 require (
 	github.com/fatih/color v1.18.0
 	github.com/gdamore/tcell/v2 v2.8.1
-	github.com/rivo/tview v0.0.0-20250501113434-0c592cd31026
+	github.com/rivo/tview v0.0.0-20250625164341-a4a78f1e05cb
 	github.com/spf13/cobra v1.9.1
 	k8s.io/client-go v0.33.1
 )
