@@ -36,6 +36,6 @@ func Get() Info {
 
 // String returns a human-readable version string
 func (i Info) String() string {
-	return fmt.Sprintf("gokcat version %s (%s) built on %s with %s for %s",
+	return fmt.Sprintf("kubectx version %s (%s) built on %s with %s for %s",
 		i.Version, i.GitCommit, i.BuildDate, i.GoVersion, i.Platform)
 }
