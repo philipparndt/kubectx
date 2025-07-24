@@ -44,17 +44,21 @@ changelog:
       - "^docs:"
       - "^test:"
 
-homebrew_casks:
+brews:
   - name: kubectx
 
-    url:
-      template: "https://github.com/philipparndt/kubectx/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    goarm: 6
+    goamd64: v1
+
+    url_template: "https://github.com/philipparndt/kubectx/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
 
     commit_author:
       name: Philipp Arndt
       email: opensource@rnd7.de
 
-    commit_msg_template: "Brew cask update for {{ .ProjectName }} version {{ .Tag }}"
+    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+
+    directory: Formula
 
     caveats: "Run using kubectx."
 
@@ -62,33 +66,31 @@ homebrew_casks:
 
     description: "Command-line tool for managing Kubernetes contexts"
 
-    hooks:
-      post:
-        install: |
-          begin
-            bash_output = Utils.safe_popen_read({ "SHELL" => "bash" }, "#{staged_path}/kubectx completion bash")
-            (bash_completion/"kubectx").write bash_output
-          rescue => e
-            opoo "Failed to install bash completion: #{e}"
-          end
+    license: "Apache-2.0"
 
-          begin
-            zsh_output = Utils.safe_popen_read({ "SHELL" => "zsh" }, "#{staged_path}/kubectx completion zsh")
-            (zsh_completion/"_kubectx").write zsh_output
-          rescue => e
-            opoo "Failed to install zsh completion: #{e}"
-          end
+    install: |
+      bin.install "kubectx"
 
-          begin
-            fish_output = Utils.safe_popen_read({ "SHELL" => "fish" }, "#{staged_path}/kubectx completion fish")
-            (fish_completion/"kubectx.fish").write fish_output
-          rescue => e
-            opoo "Failed to install fish completion: #{e}"
-          end
+      begin
+        bash_output = Utils.safe_popen_read({ "SHELL" => "bash" }, "#{bin}/kubectx completion bash")
+        (bash_completion/"kubectx").write bash_output
+      rescue => e
+        opoo "Failed to install bash completion: #{e}"
+      end
 
-          if system_command("/usr/bin/xattr", args: ["-h"]).exit_status == 0
-            system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "#{staged_path}/kubectx"]
-          end
+      begin
+        zsh_output = Utils.safe_popen_read({ "SHELL" => "zsh" }, "#{bin}/kubectx completion zsh")
+        (zsh_completion/"_kubectx").write zsh_output
+      rescue => e
+        opoo "Failed to install zsh completion: #{e}"
+      end
+
+      begin
+        fish_output = Utils.safe_popen_read({ "SHELL" => "fish" }, "#{bin}/kubectx completion fish")
+        (fish_completion/"kubectx.fish").write fish_output
+      rescue => e
+        opoo "Failed to install fish completion: #{e}"
+      end
 
     repository:
       owner: philipparndt
